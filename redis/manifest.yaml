@@ -10,7 +10,7 @@ applications:
       - binary_buildpack
     command: |
       ./install_redis_exporter.sh && \
-      ./redis_exporter --debug --web.listen-address 0.0.0.0:8080 \
+      ./redis_exporter --web.listen-address 0.0.0.0:8080 \
         --redis.addr "rediss://$( echo $VCAP_SERVICES | jq -r '."aws-elasticache-redis"[0].credentials.host')" \
         --redis.password $( echo $VCAP_SERVICES | jq -r '."aws-elasticache-redis"[0].credentials.password') \
         --tls-server-key-file $CF_INSTANCE_KEY \
