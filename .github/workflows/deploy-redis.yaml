@@ -1,5 +1,5 @@
 ---
-name: Deploy
+name: Deploy Redis
 
 on:
   push:
@@ -7,8 +7,9 @@ on:
       - main
     tags:
       - '*'
-    paths-ignore:
-      - '**.md'  # All markdown files in the repository
+    paths:
+      - 'redis/**'
+      - '.github/workflows/deploy-redis.yaml'
   release:
     types: [released]
 
@@ -32,15 +33,3 @@ jobs:
           --var ENVIRONMENT_NAME=${{ steps.cf-setup.outputs.target-environment }}
           --strategy rolling
         working-directory: ./redis
-
-      - name: Deploy Elasticsearch Exporter
-        run: cf push
-          --vars-file vars.yaml
-          --var ENVIRONMENT_NAME=${{ steps.cf-setup.outputs.target-environment }}
-          --strategy rolling
-        working-directory: ./elasticsearch
-
-      - name: Apply CF Network Policies
-        run: |
-          # Elasticsearch proxy route
-          cf add-network-policy elasticsearch-metrics es-proxy
